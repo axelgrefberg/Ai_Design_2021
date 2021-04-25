@@ -1,29 +1,38 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
-#include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "FPSPlayer.generated.h"
+
+class UCameraComponent;
+class UCapsuleComponent;
 
 UCLASS()
 class AI_TESTING_API AFPSPlayer : public APawn
 {
 	GENERATED_BODY()
 
+
+
 public:
 	// Sets default values for this pawn's properties
-	AFPSPlayer();
-
-protected:
-	// Called when the game starts or when spawned
+	AFPSPlayer();	// Called every frame
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(VisibleAnywhere)
+	UCapsuleComponent* Capsule;
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* Camera;
+
+private:
+	UPROPERTY(EditDefaultsOnly)
+	float GravityScale;
+	float ForwardInput;
+	float SidewaysInput;
+	FVector Movement;
+	void HandleVerticalMovement(float Value);
+	void HandleHorizontalMovement(float Value);
+	void HandleLookHorizontal(float value);
+	void HandleLookVertical(float value);
 };
