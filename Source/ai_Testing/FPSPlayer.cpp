@@ -25,7 +25,7 @@ void AFPSPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector CurrentInput = GetActorForwardVector() * ForwardInput + GetActorRightVector() * SidewaysInput;
-	//FVector Gravity = FVector::UpVector * -GravityScale;
+	FVector Gravity = FVector::UpVector * -GravityScale;
 
 	AddActorWorldOffset(CurrentInput );
 }
@@ -52,12 +52,13 @@ void AFPSPlayer::HandleHorizontalMovement(float Value)
 
 void AFPSPlayer::HandleLookVertical(float Value)
 {
-	AddControllerPitchInput(Value);
+	//AddControllerPitchInput(Value);
+	
 }
 
 void AFPSPlayer::HandleLookHorizontal(float Value)
 {
-	AddControllerYawInput(Value);
+	//AddControllerYawInput(Value);
 
 }
 
