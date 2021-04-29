@@ -10,6 +10,7 @@
 #include "FGHearingSenseComponent.h"
 #include "FGGameInstance.h"
 #include "DrawDebugHelpers.h"
+#include "FGDamageSenseComponent.h"
 
 AFGCharacter::AFGCharacter()
 {
@@ -46,9 +47,9 @@ void AFGCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Timer += DeltaTime;
-	
-	
+	NoiseTimer += DeltaTime;
+	DamageTimer += DeltaTime;
+
 	FFGFrameMovement FrameMovement = MovementComponent->CreateFrameMovement();
 	
 	FrameMovement.AddGravity(Gravity * DeltaTime);
@@ -61,15 +62,17 @@ void AFGCharacter::Tick(float DeltaTime)
 		FVector Velocity = (ForwardMovement + Right).GetSafeNormal() * Speed * DeltaTime;
 		FrameMovement.AddDelta(Velocity);
 	}
-	
 	MovementComponent->Move(FrameMovement);
+	TakingDamage();
+
 }
 
 void AFGCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	Listeners = Cast<UFGGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->HearingComponents;
-	
+	HearingListeners = Cast<UFGGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->HearingComponents;
+	DamageListeners = Cast<UFGGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->DamageTargetComponents;
+
 }
 
 void AFGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -96,9 +99,9 @@ void AFGCharacter::OnFire()
 
 void AFGCharacter::MakingNoise()
 {
-	if (Timer > NoiseCoolDown) 
+	if (NoiseTimer > NoiseCoolDown) 
 	{
-		for (UFGHearingSenseComponent* Listener : Listeners)
+		for (UFGHearingSenseComponent* Listener : HearingListeners)
 		{
 			Listener->HeardNoise(NoiseRadius, this);
 
@@ -108,19 +111,36 @@ void AFGCharacter::MakingNoise()
 	}
 }
 
+void AFGCharacter::TakingDamage()
+{
+	if(DamageTimer > DamageCoolDown)
+	{
+		for(UFGDamageSenseComponent* Listener : DamageListeners)
+		{
+			Listener->MadeContact(this);
+		}
+
+	}
+}
+
+
 
 void AFGCharacter::MoveForward(float Value)
 {
 	InputVector.X = Value;
 	if(Value != 0.f)
+	{
 		MakingNoise();
+	}
 }
 
 void AFGCharacter::MoveRight(float Value)
 {
 	InputVector.Y = Value;
 	if (Value != 0.f)
+	{
 		MakingNoise();
+	}
 }
 
 void AFGCharacter::TurnAtRate(float Rate)

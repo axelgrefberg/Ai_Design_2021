@@ -7,6 +7,7 @@
 #include "FGGameInstance.generated.h"
 class UFGHearingSenseComponent;
 class UFGVisionSensingTargetComponent;
+class UFGDamageSenseComponent;
 UCLASS()
 class  UFGGameInstance : public UGameInstance
 {
@@ -15,4 +16,5 @@ class  UFGGameInstance : public UGameInstance
 public:
 	TArray<UFGHearingSenseComponent*> HearingComponents;
 	TArray<UFGVisionSensingTargetComponent*> VisionTargetComponents;
+	TArray<UFGDamageSenseComponent*> DamageTargetComponents;
 };

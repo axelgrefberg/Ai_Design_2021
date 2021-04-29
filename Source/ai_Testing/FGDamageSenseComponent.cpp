@@ -2,6 +2,9 @@
 
 
 #include "FGDamageSenseComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "FGGameInstance.h"
+#include "FGCharacter.h"
 
 // Sets default values for this component's properties
 UFGDamageSenseComponent::UFGDamageSenseComponent()
@@ -18,9 +21,15 @@ UFGDamageSenseComponent::UFGDamageSenseComponent()
 void UFGDamageSenseComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	Cast<UFGGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->DamageTargetComponents.Add(this);
 	// ...
 	
+}
+
+void UFGDamageSenseComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	Cast<UFGGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->DamageTargetComponents.Remove(this);
 }
 
 
@@ -31,4 +40,16 @@ void UFGDamageSenseComponent::TickComponent(float DeltaTime, ELevelTick TickType
 
 	// ...
 }
+
+void UFGDamageSenseComponent::MadeContact(AFGCharacter* ContactOrigin)
+{
+	float DistanceToContact = FVector::Dist(ContactOrigin->GetActorLocation(), GetOwner()->GetActorLocation());
+	if(FMath::Square(DistanceToContact) < FMath::Square(ContactDistance))
+	{
+		ContactOrigin->DamageTimer = 0.f;
+		OnTargetDamaged.Broadcast();
+		
+	}
+}
+
 

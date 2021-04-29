@@ -26,7 +26,7 @@ void UFGHearingSenseComponent::BeginPlay()
 	Super::BeginPlay();
 	Cast<UFGGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->HearingComponents.Add(this);
 	// ...
-	DrawDebugSphere(GetWorld(), GetOwner()->GetActorLocation(), HearingDistance, 12, FColor(181, 0, 0), true, 20, 0, 2);
+	DrawDebugSphere(GetWorld(), GetOwner()->GetActorLocation(), HearingDistance, 12, FColor(181, 0, 0), true, 5, 0, 2);
 
 }
 
@@ -51,10 +51,10 @@ void UFGHearingSenseComponent::HeardNoise(float NoiseRadius, AFGCharacter* Noise
 	{
 		
 		Cast<AFGEnemy>(GetOwner())->CurrentTarget = NoiseOriginCharacter->GetActorLocation();
-		DrawDebugSphere(GetWorld(), NoiseOriginCharacter->GetActorLocation(), NoiseRadius, 12, FColor(181, 0, 0), true, 2, 0, 2);
+		DrawDebugSphere(GetWorld(), NoiseOriginCharacter->GetActorLocation(), NoiseRadius, 12, FColor(0, 181, 0), true, 2, 0, 2);
 		if (GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("We HEar YoU"));
-		NoiseOriginCharacter->Timer = 0;
+		NoiseOriginCharacter->NoiseTimer = 0;
 	}
 }
 

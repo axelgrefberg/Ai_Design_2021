@@ -3,6 +3,7 @@
 #include "GameFramework/Pawn.h"
 #include "FGCharacter.generated.h"
 
+class UFGDamageSenseComponent;
 class UFGHearingSenseComponent;
 class UInputComponent;
 class USkeletalMeshComponent;
@@ -37,8 +38,11 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
-	float Timer;
+	float NoiseTimer;
+	float NoiseCoolDown = 2.f;
 	float NoiseRadius = 200.f;
+	float DamageTimer;
+	float DamageCoolDown = 2.f;
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -67,9 +71,10 @@ protected:
 
 	void OnFire();
 	void MakingNoise();
-	TArray<UFGHearingSenseComponent*> Listeners;
-	float NoiseCoolDown = 2.f;
-	
+	void TakingDamage();
+	TArray<UFGHearingSenseComponent*> HearingListeners;
+	TArray<UFGDamageSenseComponent*> DamageListeners;
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
