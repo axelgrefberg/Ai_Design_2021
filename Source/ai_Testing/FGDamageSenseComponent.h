@@ -25,7 +25,7 @@ public:
 	void MadeContact(AFGCharacter* ContactOrigin);
 
 	UPROPERTY(EditDefaultsOnly)
-	float ContactDistance = 100.f;
+	float ContactDistance = 150.f;
 	UPROPERTY(BlueprintAssignable)
 	FFGDamageSensingDelegate OnTargetDamaged;
 		
