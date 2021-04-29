@@ -29,14 +29,17 @@ float AFGEnemy::GetDefaultHalfHeight() const
 void AFGEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	//VisionSensingComponent->OnTargetSensed.AddDynamic(this, &AFGEnemy::HandleVisionSense);
+	VisionSensingComponent->OnTargetSensed.AddDynamic(this, &AFGEnemy::HandleVisionSense);
+	VisionSensingComponent->OnTargetLost.AddDynamic(this, &AFGEnemy::HandleVisionSense);
+
 
 }
 
 void AFGEnemy::HandleVisionSense(const FFGVisionSensingResults& SenseInfo)
 {
-	/*AAIController* AIController = Cast<AAIController>(GetController());
-	AIController->MoveToLocation(SenseInfo.ActorLocation);*/
+	AAIController* AIController = Cast<AAIController>(GetController());
+	CurrentTarget = SenseInfo.ActorLocation;
+	AIController->MoveToLocation(SenseInfo.ActorLocation);
 }
 
 void AFGEnemy::HandleHearingSense(const FFGVisionSensingResults& SenseInfo)

@@ -29,7 +29,9 @@ public:
 
 	AFGEnemy();
 
+	UFUNCTION()
 	void HandleVisionSense(const FFGVisionSensingResults& SenseInfo);
+	UFUNCTION()
 	void HandleHearingSense(const FFGVisionSensingResults& SenseInfo);
 	virtual float GetDefaultHalfHeight() const override;
 

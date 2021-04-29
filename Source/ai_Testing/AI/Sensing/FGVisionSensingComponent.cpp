@@ -43,6 +43,7 @@ void UFGVisionSensingComponent::TickComponent(float DeltaTime, enum ELevelTick T
 		{
 			FFGVisionSensingResults Results;
 			Results.SensedActor = Target->GetOwner();
+			Results.ActorLocation = Target->GetTargetOrigin();
 			OnTargetLost.Broadcast(Results);
 			SensedTargets.RemoveAt(Index);
 		}
@@ -59,7 +60,7 @@ void UFGVisionSensingComponent::TickComponent(float DeltaTime, enum ELevelTick T
 		{
 			SensedTargets.Add(Target);
 			FFGVisionSensingResults Results;
-			Results.ActorLocation = GetOwner()->GetActorLocation();
+			Results.ActorLocation = Target->GetTargetOrigin();
 			Results.SensedActor = Target->GetOwner();
 			OnTargetSensed.Broadcast(Results);
 		}
@@ -87,11 +88,12 @@ bool UFGVisionSensingComponent::IsPointVisible(const FVector& PointToTest, const
 
 	if (bIsValid) 
 	{
-		/*FHitResult Hit;
+		FHitResult Hit;
 		TArray<AActor*> ActorsToIgnore;
 		UKismetSystemLibrary::LineTraceSingle(this, Origin, PointToTest, UEngineTypes::ConvertToTraceType(ECC_Camera), false, ActorsToIgnore, EDrawDebugTrace::ForDuration, Hit, true);
-		if(Hit.bBlockingHit)
+		if(Hit.bBlockingHit && Hit.Actor != nullptr)
 		{
+		
 			UFGVisionSensingTargetComponent* VisionSenseTarget = Hit.Actor->FindComponentByClass<UFGVisionSensingTargetComponent>();
 			if(!VisionSenseTarget)
 			{
@@ -99,7 +101,7 @@ bool UFGVisionSensingComponent::IsPointVisible(const FVector& PointToTest, const
 			}
 			
 			
-		}*/
+		}
 	}
 	return bIsValid;
 }
