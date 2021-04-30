@@ -4,6 +4,7 @@
 #include "GameFramework/Pawn.h"
 #include "FGEnemy.generated.h"
 
+class AAIController;
 class USkeletalMeshComponent;
 class UCapsuleComponent;
 class UCameraComponent;
@@ -29,6 +30,8 @@ public:
 
 	AFGEnemy();
 
+	AAIController* AIController;
+	
 	UFUNCTION()
 	void HandleVisionSense(const FFGVisionSensingResults& SenseInfo);
 	UFUNCTION()

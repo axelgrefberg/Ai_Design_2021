@@ -31,13 +31,13 @@ void AFGEnemy::BeginPlay()
 	Super::BeginPlay();
 	VisionSensingComponent->OnTargetSensed.AddDynamic(this, &AFGEnemy::HandleVisionSense);
 	VisionSensingComponent->OnTargetLost.AddDynamic(this, &AFGEnemy::HandleVisionSense);
-
+	AIController = Cast<AAIController>(GetController());
 
 }
 
 void AFGEnemy::HandleVisionSense(const FFGVisionSensingResults& SenseInfo)
 {
-	AAIController* AIController = Cast<AAIController>(GetController());
+	
 	CurrentTarget = SenseInfo.ActorLocation;
 	AIController->MoveToLocation(SenseInfo.ActorLocation);
 }
@@ -49,11 +49,19 @@ void AFGEnemy::HandleHearingSense(const FFGVisionSensingResults& SenseInfo)
 
 void AFGEnemy::Tick(float DeltaTime)
 {
-	FVector Direction = (CurrentTarget - GetActorLocation());
-	FRotator FacingRotation = Direction.Rotation();
-	FacingRotation.Roll = 0;
-	FacingRotation.Pitch = 0;
-	SetActorRotation(FacingRotation);
-	/*FRotator Rotation = UKismetMathLibrary::MakeRotFromX(CurrentTarget);
-	SetActorRotation(Rotation);*/
+	FVector Velocity = NavMovementComponent->RequestedVelocity;
+    if(!Velocity.IsNearlyZero())
+    {
+    	//Rotate towards direction it is moving in
+		Velocity.Z = 0.f;
+		FRotator Rotation = UKismetMathLibrary::MakeRotFromX(Velocity);
+		SetActorRotation(Rotation);
+    }
+
+	//Rotate towards target
+	//FVector Direction = (CurrentTarget - GetActorLocation());
+//	FRotator FacingRotation = Direction.Rotation();
+	//FacingRotation.Roll = 0;
+	//FacingRotation.Pitch = 0;
+	//SetActorRotation(FacingRotation);
 }

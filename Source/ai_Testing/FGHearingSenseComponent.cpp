@@ -2,6 +2,8 @@
 
 
 #include "FGHearingSenseComponent.h"
+
+#include "AIController.h"
 #include "FGGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
@@ -51,6 +53,7 @@ void UFGHearingSenseComponent::HeardNoise(float NoiseRadius, AFGCharacter* Noise
 	{
 		
 		Cast<AFGEnemy>(GetOwner())->CurrentTarget = NoiseOriginCharacter->GetActorLocation();
+		Cast<AFGEnemy>(GetOwner())->AIController->MoveToLocation(NoiseOriginCharacter->GetActorLocation());
 		DrawDebugSphere(GetWorld(), NoiseOriginCharacter->GetActorLocation(), NoiseRadius, 12, FColor(0, 181, 0), true, 2, 0, 2);
 		if (GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("We HEar YoU"));
